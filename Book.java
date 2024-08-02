@@ -47,6 +47,15 @@ public class Book implements Comparable<Book>, Serializable {
 
     @Override
     public int compareTo(Book other) {
-        return this.title.compareTo(other.title);
+        if (!title.equals(other.title)) {
+            return title.compareTo(other.title);
+        }
+        if (!author.equals(other.author)) {
+            return author.compareTo(other.author);
+        }
+        if (!isbn.equals(other.isbn)) {
+            return isbn.compareTo(other.isbn);
+        }
+        return 0;
     }
 }
