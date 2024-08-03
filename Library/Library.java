@@ -45,6 +45,9 @@ public enum Library {
         }
     }
 
+
+    // change this later, this is just for testing
+    @SuppressWarnings("unchecked")
     public void loadLibraryData(String filePath) throws IOException, ClassNotFoundException {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
             books = (List<Book>) ois.readObject();

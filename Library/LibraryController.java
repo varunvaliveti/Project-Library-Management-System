@@ -9,23 +9,15 @@ public class LibraryController implements Serializable{
     private List<Book> books;
 
     public LibraryController() {
-        if (new File("DB/library.ser").exists()) {
-            loadStatus();
-        }
-
-        else {
-            System.out.println("New libary, init values");
-            activeUsers = new ArrayList<>();
-            inactiveUsers = new ArrayList<>();
-            books = new ArrayList<>();
-            activeUsers.add("User 1");
-            activeUsers.add("User 2");
-            inactiveUsers.add("User 3");
-            books.add(new Book("Book 1", "Author 1", "ISBN1"));
-            books.add(new Book("Book 2", "Author 2", "ISBN2"));
-            books.add(new Book("Book 3", "Author 3", "ISBN3"));
-            saveStatus();
-        }
+        activeUsers = new ArrayList<>();
+        inactiveUsers = new ArrayList<>();
+        books = new ArrayList<>();
+        activeUsers.add("User 1");
+        activeUsers.add("User 2");
+        inactiveUsers.add("User 3");
+        books.add(new Book("Book 1", "Author 1", "ISBN1"));
+        books.add(new Book("Book 2", "Author 2", "ISBN2"));
+        books.add(new Book("Book 3", "Author 3", "ISBN3"));
     }
 
     public List<String> getActiveUsers() {
@@ -72,35 +64,4 @@ public class LibraryController implements Serializable{
     }
 
 
-    // serialize here, easier to load compared too Users and Books
-    public void saveStatus() {
-        String path = "DB/library.ser";
-        try {
-            FileOutputStream fileOut = new FileOutputStream(path);
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(this);
-            out.close();
-            fileOut.close();
-            System.out.println("Serialized data is saved in DB/library.ser");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // pull data from ser 
-    public void loadStatus() {
-        String path = "DB/library.ser";
-        try {
-            FileInputStream fileIn = new FileInputStream(path);
-            ObjectInputStream in = new ObjectInputStream(fileIn);
-            LibraryController libraryController = (LibraryController) in.readObject();
-            this.activeUsers = libraryController.activeUsers;
-            this.inactiveUsers = libraryController.inactiveUsers;
-            this.books = libraryController.books;
-            in.close();
-            fileIn.close();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    } 
 }

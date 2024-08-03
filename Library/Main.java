@@ -11,6 +11,10 @@ public class Main {
         System.out.println("Active users: " + libraryController.getActiveUsers());
         System.out.println("Inactive users: " + libraryController.getInactiveUsers());
         System.out.println("Books: " + libraryController.getBooks());
+
+
+
+
     }
 
 }
