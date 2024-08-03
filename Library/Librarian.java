@@ -1,6 +1,7 @@
+package Library;
 import java.util.List;
 
-class Librarian extends User implements LibraryUser {
+public class Librarian extends User implements LibraryUser {
     public Librarian(String name, String libraryCardNumber) {
         super(name, libraryCardNumber);
     }
