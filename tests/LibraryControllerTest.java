@@ -23,7 +23,7 @@ public class LibraryControllerTest {
 
     @Test
     public void testGetActiveUsers() {
-        List<String> activeUsers = libraryController.getActiveUsers();
+        List<User> activeUsers = libraryController.getActiveUsers();
         assertEquals(2, activeUsers.size());
         assertTrue(activeUsers.contains("User 1"));
         assertTrue(activeUsers.contains("User 2"));
@@ -31,7 +31,7 @@ public class LibraryControllerTest {
 
     @Test
     public void testGetInactiveUsers() {
-        List<String> inactiveUsers = libraryController.getInactiveUsers();
+        List<User> inactiveUsers = libraryController.getInactiveUsers();
         assertEquals(1, inactiveUsers.size());
         assertTrue(inactiveUsers.contains("User 3"));
     }
@@ -68,7 +68,7 @@ public class LibraryControllerTest {
     public void testAddUser() {
         User newUser = new User("User 4", "1234");
         libraryController.addUser(newUser);
-        List<String> activeUsers = libraryController.getActiveUsers();
+        List<User> activeUsers = libraryController.getActiveUsers();
         assertEquals(3, activeUsers.size());
         assertTrue(activeUsers.contains("User 4"));
     }
@@ -76,8 +76,8 @@ public class LibraryControllerTest {
     @Test
     public void testRemoveUser() {
         libraryController.removeUser("User 2");
-        List<String> activeUsers = libraryController.getActiveUsers();
-        List<String> inactiveUsers = libraryController.getInactiveUsers();
+        List<User> activeUsers = libraryController.getActiveUsers();
+        List<User> inactiveUsers = libraryController.getInactiveUsers();
         assertEquals(1, activeUsers.size());
         assertFalse(activeUsers.contains("User 2"));
         assertFalse(inactiveUsers.contains("User 2"));
@@ -87,8 +87,8 @@ public class LibraryControllerTest {
     public void testActivateUser() {
         libraryController.deactivateUser("User 1");
         libraryController.activateUser("User 1");
-        List<String> activeUsers = libraryController.getActiveUsers();
-        List<String> inactiveUsers = libraryController.getInactiveUsers();
+        List<User> activeUsers = libraryController.getActiveUsers();
+        List<User> inactiveUsers = libraryController.getInactiveUsers();
         assertTrue(activeUsers.contains("User 1"));
         assertFalse(inactiveUsers.contains("User 1"));
     }
@@ -96,8 +96,8 @@ public class LibraryControllerTest {
     @Test
     public void testDeactivateUser() {
         libraryController.deactivateUser("User 1");
-        List<String> activeUsers = libraryController.getActiveUsers();
-        List<String> inactiveUsers = libraryController.getInactiveUsers();
+        List<User> activeUsers = libraryController.getActiveUsers();
+        List<User> inactiveUsers = libraryController.getInactiveUsers();
         assertFalse(activeUsers.contains("User 1"));
         assertTrue(inactiveUsers.contains("User 1"));
     }

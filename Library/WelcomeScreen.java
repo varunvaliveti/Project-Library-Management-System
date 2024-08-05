@@ -95,8 +95,13 @@ public class WelcomeScreen extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String cardNumber = cardNumberField.getText();
                 String password = new String(passwordField.getPassword());
-                // Implement login logic here
-                // If login is successful, transition to the main application screen
+                User user = controller.authenticateUser(cardNumber);
+                if (user != null) {
+                    loginFrame.dispose();
+                    new UserPage(user, controller).setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(loginFrame, "Invalid credentials", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
