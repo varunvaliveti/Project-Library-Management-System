@@ -2,10 +2,16 @@ package Library;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class AdminUserPage extends JFrame {
-    
-    public AdminUserPage() {
+    private LibraryController controller;
+    private DefaultListModel<String> activeUsersListModel;
+    private DefaultListModel<String> inactiveUsersListModel;
+
+    public AdminUserPage(LibraryController controller) {
+        this.controller = controller;
         setTitle("Admin USER PAGE");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,8 +48,17 @@ public class AdminUserPage extends JFrame {
         panel.add(new JLabel("Admin USER PAGE"), BorderLayout.WEST);
         
         JPanel userInfoPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        userInfoPanel.add(new JLabel("Tsao, Chung-Wen: xxx"));
-        userInfoPanel.add(new JButton("Logout"));
+        userInfoPanel.add(new JLabel("Admin: Admin"));
+        
+        JButton logoutButton = new JButton("Logout");
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Close the AdminUserPage window
+                new WelcomeScreen().setVisible(true); // Show the WelcomeScreen
+            }
+        });
+        userInfoPanel.add(logoutButton);
         
         panel.add(userInfoPanel, BorderLayout.EAST);
         return panel;
@@ -53,12 +68,24 @@ public class AdminUserPage extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createTitledBorder("Library Inactive Users:"));
         
-        DefaultListModel<String> listModel = new DefaultListModel<>();
-        listModel.addElement("Bhat, Toshi");
-        JList<String> userList = new JList<>(listModel);
+        inactiveUsersListModel = new DefaultListModel<>();
+        // Populate with inactive users from the controller
+        for (User user : controller.getInactiveUsers()) {
+            inactiveUsersListModel.addElement(user.getName());
+        }
+        JList<String> userList = new JList<>(inactiveUsersListModel);
         panel.add(new JScrollPane(userList), BorderLayout.CENTER);
         
-        panel.add(new JButton("Re-Activate"), BorderLayout.SOUTH);
+        JButton activateButton = new JButton("Re-Activate");
+        activateButton.addActionListener(e -> {
+            String selectedUser = userList.getSelectedValue();
+            if (selectedUser != null) {
+                controller.activateUser(selectedUser);
+                inactiveUsersListModel.removeElement(selectedUser);
+                activeUsersListModel.addElement(selectedUser);
+            }
+        });
+        panel.add(activateButton, BorderLayout.SOUTH);
         return panel;
     }
     
@@ -66,12 +93,24 @@ public class AdminUserPage extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createTitledBorder("Active Users:"));
         
-        DefaultListModel<String> listModel = new DefaultListModel<>();
-        // Add active users here
-        JList<String> userList = new JList<>(listModel);
+        activeUsersListModel = new DefaultListModel<>();
+        // Populate with active users from the controller
+        for (User user : controller.getActiveUsers()) {
+            activeUsersListModel.addElement(user.getName());
+        }
+        JList<String> userList = new JList<>(activeUsersListModel);
         panel.add(new JScrollPane(userList), BorderLayout.CENTER);
         
-        panel.add(new JButton("Inactivate"), BorderLayout.SOUTH);
+        JButton deactivateButton = new JButton("Inactivate");
+        deactivateButton.addActionListener(e -> {
+            String selectedUser = userList.getSelectedValue();
+            if (selectedUser != null) {
+                controller.deactivateUser(selectedUser);
+                activeUsersListModel.removeElement(selectedUser);
+                inactiveUsersListModel.addElement(selectedUser);
+            }
+        });
+        panel.add(deactivateButton, BorderLayout.SOUTH);
         return panel;
     }
     
@@ -86,4 +125,3 @@ public class AdminUserPage extends JFrame {
         return panel;
     }
 }
-

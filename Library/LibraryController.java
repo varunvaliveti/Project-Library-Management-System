@@ -65,8 +65,9 @@ public class LibraryController implements Serializable {
     public void activateUser(String userName) {
         for (User user : inactiveUsers) {
             if (user.getName().equals(userName)) {
-                inactiveUsers.remove(user);
+                user.setActive(true);
                 activeUsers.add(user);
+                inactiveUsers.remove(user);
                 break;
             }
         }
@@ -75,11 +76,16 @@ public class LibraryController implements Serializable {
     public void deactivateUser(String userName) {
         for (User user : activeUsers) {
             if (user.getName().equals(userName)) {
-                activeUsers.remove(user);
+                user.setActive(false);
                 inactiveUsers.add(user);
+                activeUsers.remove(user);
                 break;
             }
         }
+    }
+
+    public boolean authenticateLibrarian(String username, String password) {
+        return "Admin".equals(username) && "admin123".equals(password);
     }
 
     public User authenticateUser(String cardNumber) {

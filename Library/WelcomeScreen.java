@@ -38,6 +38,10 @@ public class WelcomeScreen extends JFrame {
         JButton signupButton = new JButton("Signup");
         signupButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        // Add a new button for librarian login
+        JButton librarianLoginButton = new JButton("Librarian Login");
+        librarianLoginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         // Add action listeners
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -60,6 +64,14 @@ public class WelcomeScreen extends JFrame {
             }
         });
 
+        // Add action listener for librarian login
+        librarianLoginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showLibrarianLoginScreen();
+            }
+        });
+
         // Add components to panel
         panel.add(welcomeLabel);
         panel.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -70,6 +82,8 @@ public class WelcomeScreen extends JFrame {
         panel.add(signupPrompt);
         panel.add(Box.createRigidArea(new Dimension(0, 10)));
         panel.add(signupButton);
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        panel.add(librarianLoginButton);
 
         // Add panel to frame
         getContentPane().add(panel);
@@ -158,6 +172,44 @@ public class WelcomeScreen extends JFrame {
 
         signupFrame.getContentPane().add(panel);
         signupFrame.setVisible(true);
+    }
+
+    private void showLibrarianLoginScreen() {
+        JFrame loginFrame = new JFrame("Librarian Login");
+        loginFrame.setSize(300, 200);
+        loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        loginFrame.setLocationRelativeTo(null);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JTextField usernameField = new JTextField(20);
+        JPasswordField passwordField = new JPasswordField(20);
+        JButton loginButton = new JButton("Login");
+
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = usernameField.getText();
+                String password = new String(passwordField.getPassword());
+                if (controller.authenticateLibrarian(username, password)) {
+                    loginFrame.dispose();
+                    new AdminUserPage(controller).setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(loginFrame, "Invalid credentials", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        panel.add(new JLabel("Username:"));
+        panel.add(usernameField);
+        panel.add(new JLabel("Password:"));
+        panel.add(passwordField);
+        panel.add(loginButton);
+
+        loginFrame.getContentPane().add(panel);
+        loginFrame.setVisible(true);
     }
 
     private String generateLibraryCardNumber() {

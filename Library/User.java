@@ -62,6 +62,10 @@ public class User implements Comparable<User>, Serializable {
         return false;
     }
 
+    public boolean canCheckOutBooks() {
+        return isActive;
+    }
+
     @Override
     public int compareTo(User other) {
         return this.name.compareTo(other.name);

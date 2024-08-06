@@ -180,6 +180,11 @@ public class UserPage extends JFrame {
     }
 
     private void checkOutBook() {
+        if (!user.canCheckOutBooks()) {
+            JOptionPane.showMessageDialog(this, "Inactive users cannot check out books.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         String selectedBookTitle = libraryBooksList.getSelectedValue();
         if (selectedBookTitle == null) {
             JOptionPane.showMessageDialog(this, "Please select a book from the library list.", "Error", JOptionPane.ERROR_MESSAGE);
