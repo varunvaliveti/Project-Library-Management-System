@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import Library.*;
 
+import java.io.File;
 import java.util.List;
 import static org.junit.Assert.*;
 
@@ -13,12 +14,16 @@ public class LibraryControllerTest {
 
     @Before
     public void setUp() {
-        libraryController = new LibraryController();
+        libraryController = LibraryController.getInstance();
+        libraryController.FILE_PATH = "DB/test.ser";
     }
 
     @After
     public void tearDown() {
         libraryController = null; // Clean up resources if needed
+
+        File toDel = new File(libraryController.FILE_PATH);
+        toDel.delete();
     }
 
     @Test

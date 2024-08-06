@@ -1,5 +1,8 @@
 package tests;
 import static org.junit.Assert.*;
+
+import java.io.File;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,26 +12,31 @@ public class UnitTest {
     private Book b;
     private RegularUser u;
     private Librarian librarian;
-    private Library library;
+    private LibraryController libraryController;
 
     @Before
     public void setUp() {
         b = new Book("The Book", "Anoosh", "ISBN1");
         u = new RegularUser("Varoon", "1234");
         librarian = new Librarian("Libby", "5678");
-        library = Library.INSTANCE; 
-        library.addBook(b);
-        library.addUser(u);
-        library.addUser(librarian);
-
-        LibraryController libraryController = new LibraryController();
+        libraryController = LibraryController.getInstance();
+        libraryController.addBook(b);
+        libraryController.addUser(u);
+        libraryController.addUser(librarian);
+        libraryController.FILE_PATH = "DB/test.ser";
     }
 
     @After
     public void cleanUp() {
         // Reset the library state for other tests
-        library.getBooks().clear();
-        library.getUsers().clear();
+        libraryController.getBooks().clear();
+        libraryController.getActiveUsers().clear();
+        libraryController.getInactiveUsers().clear();
+
+        // delete file
+        File toDel = new File(libraryController.FILE_PATH);
+        toDel.delete();
+
     }
 
     // Book functionality
@@ -82,13 +90,13 @@ public class UnitTest {
     @Test
     public void testViewBooks() {
         librarian.viewBooks();
-        assertEquals(1, library.getBooks().size());
+        assertEquals(1, libraryController.getBooks().size());
     }
 
     @Test
     public void testViewUsers() {
         librarian.viewUsers();
-        assertEquals(2, library.getUsers().size()); // Includes the librarian
+        assertEquals(2, libraryController.getActiveUsers().size() + libraryController.getInactiveUsers().size()); // Includes the librarian
     }
 
     @Test
@@ -114,4 +122,3 @@ public class UnitTest {
         assertEquals(0, u.getBorrowedBooks().size()); // Inactive user cannot check out books
     }
 }
-

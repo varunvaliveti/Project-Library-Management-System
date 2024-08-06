@@ -1,18 +1,42 @@
 package Library;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryController implements Serializable {
+    public String FILE_PATH = "DB/library.ser";
     private List<User> activeUsers;
     private List<User> inactiveUsers;
     private List<Book> books;
 
-    public LibraryController() {
+    private static LibraryController instance;
+
+    private LibraryController() {
+        try {
+            loadLibrary();
+        }
+        catch (IOException | ClassNotFoundException e) {
+            System.out.println(FILE_PATH + " not found. Initializing library with default data.");
+            initializeLibrary();
+            save();
+            System.out.println("Library initialized successfully.");
+        }
+    }
+
+    public static synchronized LibraryController getInstance() {
+        if (instance == null) {
+            instance = new LibraryController();
+        }
+        return instance;
+    }
+
+    private void initializeLibrary() {
         activeUsers = new ArrayList<>();
         inactiveUsers = new ArrayList<>();
         books = new ArrayList<>();
+
+        // Add default users and books
         activeUsers.add(new User("User 1", "Card1"));
         activeUsers.add(new User("User 2", "Card2"));
         inactiveUsers.add(new User("User 3", "Card3"));
@@ -31,6 +55,24 @@ public class LibraryController implements Serializable {
         books.add(new Book("War and Peace", "Leo Tolstoy", "9781400079988"));
         books.add(new Book("The Odyssey", "Homer", "9780140268867"));
         books.add(new Book("Crime and Punishment", "Fyodor Dostoevsky", "9780140449136"));
+
+        // Ensure the directory exists
+        File file = new File(FILE_PATH);
+        File directory = file.getParentFile();
+        if (!directory.exists()) {
+            directory.mkdirs(); // Create directories if they don't exist
+        }
+
+        // Create the file if it does not exist
+        try {
+            if (file.createNewFile()) {
+                System.out.println("File created: " + FILE_PATH);
+            }
+        }
+        catch (IOException e) {
+            System.out.println("Error initializing library data");
+            e.printStackTrace();
+        }
     }
 
     public List<User> getActiveUsers() {
@@ -47,19 +89,23 @@ public class LibraryController implements Serializable {
 
     public void addBook(Book book) {
         books.add(book);
+        save();
     }
 
     public void removeBook(String title) {
         books.removeIf(book -> book.getTitle().equals(title));
+        save();
     }
 
     public void addUser(User user) {
         activeUsers.add(user);
+        save();
     }
 
     public void removeUser(String name) {
         activeUsers.removeIf(user -> user.getName().equals(name));
         inactiveUsers.removeIf(user -> user.getName().equals(name));
+        save();
     }
 
     public void activateUser(String userName) {
@@ -68,6 +114,7 @@ public class LibraryController implements Serializable {
                 user.setActive(true);
                 activeUsers.add(user);
                 inactiveUsers.remove(user);
+                save();
                 break;
             }
         }
@@ -79,6 +126,7 @@ public class LibraryController implements Serializable {
                 user.setActive(false);
                 inactiveUsers.add(user);
                 activeUsers.remove(user);
+                save();
                 break;
             }
         }
@@ -103,5 +151,32 @@ public class LibraryController implements Serializable {
 
     public List<Book> getLibraryBooks() {
         return books;
+    }
+
+    public void save() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
+            oos.writeObject(books);
+            oos.writeObject(activeUsers);
+            oos.writeObject(inactiveUsers);
+        }
+        catch (IOException e) {
+            System.out.println("Error saving library data");
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void loadLibrary() throws IOException, ClassNotFoundException {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
+            books = (List<Book>) ois.readObject();
+            activeUsers = (List<User>) ois.readObject();
+            inactiveUsers = (List<User>) ois.readObject();
+        }
+        catch (FileNotFoundException e) {
+            throw new FileNotFoundException("File not found, initialization required.");
+        }
+        catch (ClassNotFoundException | IOException e) {
+            throw new ClassNotFoundException("Error loading library data. " + e.getMessage());
+        }
     }
 }

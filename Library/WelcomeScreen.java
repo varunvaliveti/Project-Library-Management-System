@@ -7,11 +7,11 @@ import java.awt.event.ActionListener;
 import java.util.Random;
 
 public class WelcomeScreen extends JFrame {
-    private LibraryController controller = new LibraryController();
+    private LibraryController controller = LibraryController.getInstance();
 
     public WelcomeScreen() {
         setTitle("Library Management System");
-        setSize(400, 300);
+        setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 

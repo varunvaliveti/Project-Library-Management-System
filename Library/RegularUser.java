@@ -8,7 +8,7 @@ public class RegularUser extends User implements LibraryUser {
 
     @Override
     public void viewBooks() {
-        List<Book> books = Library.INSTANCE.getBooks();
+        List<Book> books = LibraryController.getInstance().getBooks(); 
         for (Book book : books) {
             System.out.println(book.getTitle() + " by " + book.getAuthor());
         }
