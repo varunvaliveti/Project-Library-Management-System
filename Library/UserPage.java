@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class UserPage extends JFrame {
@@ -117,6 +118,47 @@ public class UserPage extends JFrame {
 
         JTextField searchField = new JTextField("Enter Search Keywords ...");
         JButton searchButton = new JButton("Search");
+        
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String keyword = searchField.getText().trim();
+                if (keyword.isEmpty() || keyword.equals("Enter Search Keywords ...")) {
+                    JOptionPane.showMessageDialog(UserPage.this, "Please enter a valid search keyword.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                List<Book> searchResults = controller.searchBooksByKeyword(keyword);
+                if (searchResults.isEmpty()) {
+                    JOptionPane.showMessageDialog(UserPage.this, "No books found matching the keyword.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    String[] bookTitles = searchResults.stream().map(Book::getTitle).toArray(String[]::new);
+                    libraryBooksList.setListData(bookTitles);
+                }
+            }
+        });
+
+        sortButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedOption = (String) sortComboBox.getSelectedItem();
+                List<Book> sortedBooks;
+                switch (selectedOption) {
+                    case "Author":
+                        sortedBooks = controller.sortBooksByAuthor();
+                        break;
+                    case "Title":
+                        sortedBooks = controller.sortBooksByTitle();
+                        break;
+                    case "ISBN":
+                        sortedBooks = controller.sortBooksByISBN();
+                        break;
+                    default:
+                        sortedBooks = new ArrayList<>();
+                }
+                String[] bookTitles = sortedBooks.stream().map(Book::getTitle).toArray(String[]::new);
+                libraryBooksList.setListData(bookTitles);
+            }
+        });
 
         sortSearchPanel.add(sortComboBox);
         sortSearchPanel.add(sortButton);
@@ -238,4 +280,8 @@ public class UserPage extends JFrame {
         checkedOutBooksList.setListData(getCheckedOutBooks());
         libraryBooksList.setListData(getLibraryBooks());
     }
+
+
+
+
 }

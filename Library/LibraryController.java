@@ -3,6 +3,7 @@ package Library;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Comparator;
 
 public class LibraryController implements Serializable {
     public String FILE_PATH = "DB/library.ser";
@@ -151,6 +152,36 @@ public class LibraryController implements Serializable {
 
     public List<Book> getLibraryBooks() {
         return books;
+    }
+
+    public List<Book> searchBooksByKeyword(String keyword) {
+        List<Book> matchingBooks = new ArrayList<>();
+        for (Book book : books) {
+            if (book.getTitle().toLowerCase().contains(keyword.toLowerCase()) ||
+                book.getAuthor().toLowerCase().contains(keyword.toLowerCase()) ||
+                book.getIsbn().toLowerCase().contains(keyword.toLowerCase())) {
+                matchingBooks.add(book);
+            }
+        }
+        return matchingBooks;
+    }
+
+    public List<Book> sortBooksByAuthor() {
+        List<Book> sortedBooks = new ArrayList<>(books);
+        sortedBooks.sort(Comparator.comparing(Book::getAuthor));
+        return sortedBooks;
+    }
+
+    public List<Book> sortBooksByTitle() {
+        List<Book> sortedBooks = new ArrayList<>(books);
+        sortedBooks.sort(Comparator.comparing(Book::getTitle));
+        return sortedBooks;
+    }
+
+    public List<Book> sortBooksByISBN() {
+        List<Book> sortedBooks = new ArrayList<>(books);
+        sortedBooks.sort(Comparator.comparing(Book::getIsbn));
+        return sortedBooks;
     }
 
     public void save() {
