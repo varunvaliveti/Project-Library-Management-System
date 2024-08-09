@@ -50,6 +50,8 @@ public class WelcomeScreen extends JFrame {
             }
         });
 
+        
+
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,6 +71,7 @@ public class WelcomeScreen extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 showLibrarianLoginScreen();
+                
             }
         });
 
@@ -113,6 +116,7 @@ public class WelcomeScreen extends JFrame {
                 if (user != null) {
                     loginFrame.dispose();
                     new UserPage(user, controller).setVisible(true);
+                    setVisible(false);
                 } else {
                     JOptionPane.showMessageDialog(loginFrame, "Invalid credentials", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -175,6 +179,7 @@ public class WelcomeScreen extends JFrame {
     }
 
     private void showLibrarianLoginScreen() {
+        
         JFrame loginFrame = new JFrame("Librarian Login");
         loginFrame.setSize(300, 200);
         loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -196,6 +201,8 @@ public class WelcomeScreen extends JFrame {
                 if (controller.authenticateLibrarian(username, password)) {
                     loginFrame.dispose();
                     new AdminUserPage(controller).setVisible(true);
+                    setVisible(false);
+                    
                 } else {
                     JOptionPane.showMessageDialog(loginFrame, "Invalid credentials", "Error", JOptionPane.ERROR_MESSAGE);
                 }

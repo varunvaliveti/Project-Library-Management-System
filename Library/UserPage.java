@@ -32,15 +32,9 @@ public class UserPage extends JFrame {
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new BorderLayout());
         JLabel userLabel = new JLabel(user.getName() + "; " + user.getLibraryCardNumber(), SwingConstants.RIGHT);
-        JButton logoutButton = new JButton("Logout");
-        logoutButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose(); // Close the UserPage window
-            }
-        });
+        
         headerPanel.add(userLabel, BorderLayout.CENTER);
-        headerPanel.add(logoutButton, BorderLayout.EAST);
+        
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // Content panel
@@ -86,6 +80,7 @@ public class UserPage extends JFrame {
         JPanel checkoutPanel = new JPanel();
         JButton checkOutButton = new JButton("Check Out");
         JButton checkInButton = new JButton("Check In");
+        JButton logoutButton = new JButton("Logout");
 
         checkOutButton.addActionListener(new ActionListener() {
             @Override
@@ -101,8 +96,17 @@ public class UserPage extends JFrame {
             }
         });
 
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Close the UserPage window
+                new WelcomeScreen().setVisible(true); // Show the WelcomeScreen
+            }
+        });
+
         checkoutPanel.add(checkOutButton);
         checkoutPanel.add(checkInButton);
+        checkoutPanel.add(logoutButton);
         controlPanel.add(checkoutPanel);
 
         mainPanel.add(controlPanel, BorderLayout.SOUTH);
