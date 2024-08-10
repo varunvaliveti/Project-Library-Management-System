@@ -17,8 +17,13 @@ To start using the Library Management System, follow these steps:
 
 ### 1. Compile the Java Files
 
-Navigate to the root directory of the project where the `Library` folder is located. Compile all Java files (except for `Cafe.java` and `UnitTest.java`) using the following command:
-
 ```bash
 javac Library/*.java
+```
+
+### 2. Run program
+
+```bash
+java Library.WelcomeScreen
+```
 
