@@ -26,4 +26,7 @@ javac Library/*.java
 ```bash
 java Library.WelcomeScreen
 ```
-
+## Authors
+- Aneesh Ramanathan
+- Varun Valiveti
+- Andy Van
